@@ -1,6 +1,10 @@
 package main
-import()
-
+import(
+	cfg "Config"
+	"fmt"
+)
 
 func main(){
+	var status = cfg.SetConnection()
+	fmt.Println(status)
 }
