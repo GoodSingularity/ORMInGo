@@ -2,7 +2,28 @@ package Interfaces
 import(
 	"github.com/fatih/structs"
 	"fmt"
+	"strings"
+	cfg "Config"
 )
+
+func CurlyBrackets(t []interface{}) string {
+	s := make([]string, len(t))
+
+	for i, v := range t {
+	   s[i] = fmt.Sprint(v)
+	}
+	replace := map[string]string{
+	    "[": "{",
+	    "]": "}",
+		" ": ",",
+	}
+	str := strings.Join(s,"' '")
+	for s, r := range replace {
+	    str = strings.Replace(str, s, r, -1)
+	}
+	
+	return "('"+str+"');"
+}
 
 //Constuctor
 func New(i interface{}) interface{} {
@@ -13,10 +34,11 @@ func New(i interface{}) interface{} {
 	
 	{
 	    fields := Fields(i)
+	    values := Values(i)
 	    err := 0
 	    for j := 0; j<len(fields); j++ {
 	    	field := fields[j]
-	    	value := Values(i)[j]
+	    	value := values[j]
 		    if value != "" {
 				fmt.Println(field+ " is initialized")
 			}else {
@@ -29,7 +51,15 @@ func New(i interface{}) interface{} {
 	    	return nil
 	    }
     }
-	fmt.Println("You've created instance of " + Name(i))
+    name := Name(i)
+	fmt.Println("You've created instance of " + name)
+	v := CurlyBrackets(Values(i))
+	fmt.Println(v)
+	db := cfg.Conn
+	query := "INSERT INTO " + name + " VALUES " + v
+	fmt.Println(query)
+	_, err := db.Exec(query)
+	fmt.Println(err)
 	return i
 }
 
