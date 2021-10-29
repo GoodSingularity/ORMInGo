@@ -11,6 +11,7 @@ import(
 
 	type Company struct{
 		Name string
+		Arr []string
 		Power int
 	}
 
@@ -87,33 +88,19 @@ func Values(i interface{}) []interface{}{
 	return structs.Values(i)
 }
 
-func sliceFromElemValue(v interface{}) ([]interface{}) {
-    rt := reflect.TypeOf(v)
-    s := []interface{}{}
-
-    for i := 0; i < 3; i++ { // dummy loop
-        s = append(s, reflect.New(rt).Elem().Interface())
-    }
-
-    return s
-}
-
-
-
-
-
 func All(u interface{}) []interface{}{
 	db := cfg.Conn
     name := Name(u)
     query := "SELECT * FROM " + name + ";"
 	rows, _ := db.Query(query)
-  var data []interface{}
+
+  	var data []interface{}
     for rows.Next() {
 
          t := reflect.TypeOf(u)
          val := reflect.New(t).Interface()
 
-         errScan := rows.Scan(StrutForScan(val)...)
+         errScan := rows.Scan(Scanning(val)...)
          if errScan != nil {
              //proper err handling
          }
@@ -122,12 +109,13 @@ func All(u interface{}) []interface{}{
     return data
 }
 
-func StrutForScan(u interface{}) []interface{} {
+func Scanning(u interface{}) []interface{} {
    val := reflect.ValueOf(u).Elem()
    v := make([]interface{}, val.NumField())
    for i := 0; i < val.NumField(); i++ {
       valueField := val.Field(i)
       v[i] = valueField.Addr().Interface()
    }
+
    return v
 }

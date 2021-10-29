@@ -11,7 +11,7 @@ import(
 func main(){
 	var status = cfg.SetConnection()
 	fmt.Println(status)
-	cmp := Interfaces.Company{"Int", 10}
+	cmp := Interfaces.Company{"Int",[]string{"xd"}, 10}
 	Interfaces.New(cmp)
   	var cmps Interfaces.Company
   	jsonInfo, _ := json.Marshal(Interfaces.All(cmps))
