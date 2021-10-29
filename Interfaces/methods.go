@@ -1,10 +1,18 @@
+
 package Interfaces
 import(
 	"github.com/fatih/structs"
 	"fmt"
+	 _ "github.com/lib/pq"
 	"strings"
 	cfg "Config"
+	"reflect"
 )
+
+	type Company struct{
+		Name string
+		Power int
+	}
 
 func CurlyBrackets(t []interface{}) string {
 	s := make([]string, len(t))
@@ -77,4 +85,49 @@ func Fields(i interface{}) []string {
 
 func Values(i interface{}) []interface{}{
 	return structs.Values(i)
+}
+
+func sliceFromElemValue(v interface{}) ([]interface{}) {
+    rt := reflect.TypeOf(v)
+    s := []interface{}{}
+
+    for i := 0; i < 3; i++ { // dummy loop
+        s = append(s, reflect.New(rt).Elem().Interface())
+    }
+
+    return s
+}
+
+
+
+
+
+func All(u interface{}) []interface{}{
+	db := cfg.Conn
+    name := Name(u)
+    query := "SELECT * FROM " + name + ";"
+	rows, _ := db.Query(query)
+  var data []interface{}
+    for rows.Next() {
+
+         t := reflect.TypeOf(u)
+         val := reflect.New(t).Interface()
+
+         errScan := rows.Scan(StrutForScan(val)...)
+         if errScan != nil {
+             //proper err handling
+         }
+         data = append(data, val)
+    }
+    return data
+}
+
+func StrutForScan(u interface{}) []interface{} {
+   val := reflect.ValueOf(u).Elem()
+   v := make([]interface{}, val.NumField())
+   for i := 0; i < val.NumField(); i++ {
+      valueField := val.Field(i)
+      v[i] = valueField.Addr().Interface()
+   }
+   return v
 }
