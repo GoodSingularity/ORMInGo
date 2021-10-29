@@ -15,7 +15,7 @@ const (
   dbname   = "development"
 )
 
-var conn *sql.DB
+var Conn *sql.DB
 
 func ConnectionInfo() string {
   psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
@@ -30,11 +30,10 @@ func SetConnection() string{
 	if err != nil {
 		return "Failed"
 	}
-	conn = db
-	CloseConnection()
+	Conn = db
 	return "Succeed"
 }
 
 func CloseConnection(){
-	defer conn.Close()
+	defer Conn.Close()
 }
