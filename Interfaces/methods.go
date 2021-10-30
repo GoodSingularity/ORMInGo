@@ -3,7 +3,7 @@ package Interfaces
 import(
 	"github.com/fatih/structs"
 	"fmt"
-	 _ "github.com/lib/pq"
+	 pq "github.com/lib/pq"
 	"strings"
 	cfg "Config"
 	"reflect"
@@ -100,7 +100,9 @@ func All(u interface{}) []interface{}{
          t := reflect.TypeOf(u)
          val := reflect.New(t).Interface()
 
-         errScan := rows.Scan(Scanning(val)...)
+		 scan := Scanning(val)
+         errScan := rows.Scan(scan...)
+
          if errScan != nil {
              //proper err handling
          }
@@ -113,9 +115,13 @@ func Scanning(u interface{}) []interface{} {
    val := reflect.ValueOf(u).Elem()
    v := make([]interface{}, val.NumField())
    for i := 0; i < val.NumField(); i++ {
+   
       valueField := val.Field(i)
       v[i] = valueField.Addr().Interface()
+	  
+	  if fmt.Sprintf("%v", v[i]) == "&[]" {
+	  	v[i] =  pq.Array(*&v[i])
+	  }
    }
-
    return v
 }
