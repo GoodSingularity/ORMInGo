@@ -1,0 +1,4 @@
+# Ignore Github.com packages
+**/github.com
+**/gopkg.in/yaml.v3
+**/golang.org
