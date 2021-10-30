@@ -1,10 +1,19 @@
+
 package Interfaces
 import(
 	"github.com/fatih/structs"
 	"fmt"
+	 pq "github.com/lib/pq"
 	"strings"
 	cfg "Config"
+	"reflect"
 )
+
+	type Company struct{
+		Name string
+		Arr []string
+		Power int
+	}
 
 func CurlyBrackets(t []interface{}) string {
 	s := make([]string, len(t))
@@ -77,4 +86,42 @@ func Fields(i interface{}) []string {
 
 func Values(i interface{}) []interface{}{
 	return structs.Values(i)
+}
+
+func All(u interface{}) []interface{}{
+	db := cfg.Conn
+    name := Name(u)
+    query := "SELECT * FROM " + name + ";"
+	rows, _ := db.Query(query)
+
+  	var data []interface{}
+    for rows.Next() {
+
+         t := reflect.TypeOf(u)
+         val := reflect.New(t).Interface()
+
+		 scan := Scanning(val)
+         errScan := rows.Scan(scan...)
+
+         if errScan != nil {
+             //proper err handling
+         }
+         data = append(data, val)
+    }
+    return data
+}
+
+func Scanning(u interface{}) []interface{} {
+   val := reflect.ValueOf(u).Elem()
+   v := make([]interface{}, val.NumField())
+   for i := 0; i < val.NumField(); i++ {
+   
+      valueField := val.Field(i)
+      v[i] = valueField.Addr().Interface()
+	  
+	  if fmt.Sprintf("%v", v[i]) == "&[]" {
+	  	v[i] =  pq.Array(*&v[i])
+	  }
+   }
+   return v
 }
