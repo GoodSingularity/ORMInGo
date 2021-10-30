@@ -6,6 +6,7 @@ import(
 	"log"
 	"encoding/json"
 	"github.com/google/uuid"
+	"github.com/mitchellh/colorstring"
 )
 
 func main(){
@@ -21,12 +22,12 @@ func main(){
     if err != nil {
         log.Fatal("Failed to generate json", err)
     }
-    fmt.Printf("%s\n", string(prettyJSON))
+    colorstring.Println("[yellow]" +string(prettyJSON)+"\n")
     find := Interfaces.Find(Interfaces.Company{},"3abdf70c-6273-4644-b048-dbbc50d95094")
 
     prettyjSON, err := json.MarshalIndent(find, "", "    ")
     if err != nil {
         log.Fatal("Failed to generate json", err)
     }
-    fmt.Printf("%s\n", string(prettyjSON))
+    colorstring.Println("[yellow]" +string(prettyjSON)+"\n")
 }
