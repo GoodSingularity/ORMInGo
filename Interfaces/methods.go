@@ -10,6 +10,7 @@ import(
 )
 
 	type Company struct{
+		ID   string
 		Name string
 		Arr []string
 		Power int
@@ -124,4 +125,29 @@ func Scanning(u interface{}) []interface{} {
 	  }
    }
    return v
+}
+
+
+func Find(u interface{}, id string) []interface{}{
+	db := cfg.Conn
+    name := Name(u)
+    query := "SELECT * FROM " + name + " WHERE " + "id = '"+id+"';"
+    fmt.Println(query)
+	rows, _ := db.Query(query)
+
+  	var data []interface{}
+    for rows.Next() {
+
+         t := reflect.TypeOf(u)
+         val := reflect.New(t).Interface()
+
+		 scan := Scanning(val)
+         errScan := rows.Scan(scan...)
+
+         if errScan != nil {
+             //proper err handling
+         }
+         data = append(data, val)
+    }
+    return data
 }

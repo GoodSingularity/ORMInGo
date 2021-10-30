@@ -5,12 +5,15 @@ import(
 	"Interfaces"
 	"log"
 	"encoding/json"
+	"github.com/google/uuid"
 )
 
 func main(){
 	var status = cfg.SetConnection()
 	fmt.Println(status)
-	cmp := Interfaces.Company{"Int",[]string{"kamil", "lukasz", "tycjan"}, 10}
+	id := uuid.New()
+	uuid := id.String()
+	cmp := Interfaces.Company{uuid, "Int",[]string{"kamil", "lukasz", "tycjan"}, 10}
 	Interfaces.New(cmp)
   	all := Interfaces.All(Interfaces.Company{})
 
@@ -19,4 +22,11 @@ func main(){
         log.Fatal("Failed to generate json", err)
     }
     fmt.Printf("%s\n", string(prettyJSON))
+    find := Interfaces.Find(Interfaces.Company{},"3abdf70c-6273-4644-b048-dbbc50d95094")
+
+    prettyjSON, err := json.MarshalIndent(find, "", "    ")
+    if err != nil {
+        log.Fatal("Failed to generate json", err)
+    }
+    fmt.Printf("%s\n", string(prettyjSON))
 }
