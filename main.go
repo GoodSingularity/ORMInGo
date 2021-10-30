@@ -7,6 +7,7 @@ import(
 	"encoding/json"
 	"github.com/google/uuid"
 	"github.com/mitchellh/colorstring"
+	"github.com/bengadbois/flippytext"
 )
 
 func main(){

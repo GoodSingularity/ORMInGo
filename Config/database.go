@@ -5,6 +5,8 @@ import (
 	"fmt"
   _ "github.com/lib/pq"
           "database/sql"
+  	"github.com/bengadbois/flippytext"
+
 )
 
 var Conn *sql.DB
@@ -13,7 +15,7 @@ func ConnectionInfo() string {
   psqlInfo := fmt.Sprintf("host=%s port=%d user=%s "+
     "password=%s dbname=%s sslmode=disable",
     host, port, user, password, dbname)
-  fmt.Println(psqlInfo)
+  flippytext.New().Write(psqlInfo)
   return psqlInfo
 }
 
