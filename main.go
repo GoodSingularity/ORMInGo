@@ -3,17 +3,20 @@ import(
 	cfg "Config"
 	"fmt"
 	"Interfaces"
-	"encoding/json"
 	"log"
-
+	"encoding/json"
 )
 
 func main(){
 	var status = cfg.SetConnection()
 	fmt.Println(status)
-	cmp := Interfaces.Company{"Int",[]string{"xd", "XD"}, 10}
+	cmp := Interfaces.Company{"Int",[]string{"kamil", "lukasz", "tycjan"}, 10}
 	Interfaces.New(cmp)
-  	var cmps Interfaces.Company
-  	jsonInfo, _ := json.Marshal(Interfaces.All(cmps))
-	log.Printf("jsonInfo: %s\n", jsonInfo)
+  	all := Interfaces.All(Interfaces.Company{})
+
+    prettyJSON, err := json.MarshalIndent(all, "", "    ")
+    if err != nil {
+        log.Fatal("Failed to generate json", err)
+    }
+    fmt.Printf("%s\n", string(prettyJSON))
 }
