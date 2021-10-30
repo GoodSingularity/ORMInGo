@@ -7,6 +7,7 @@ import(
 	"strings"
 	cfg "Config"
 	"reflect"
+	"github.com/mitchellh/colorstring"
 )
 
 	type Company struct{
@@ -47,29 +48,21 @@ func New(i interface{}) interface{} {
 	    values := Values(i)
 	    err := 0
 	    for j := 0; j<len(fields); j++ {
-	    	field := fields[j]
 	    	value := values[j]
-		    if value != "" {
-				fmt.Println(field+ " is initialized")
-			}else {
-				fmt.Println(field +" is not initialized")
+		    if value == "" {
 				err = err +1
 			}
 	    }
 	    if err > 0	{
-	    	fmt.Println("You couldnt create instance of " + Name(i))
 	    	return nil
 	    }
     }
     name := Name(i)
-	fmt.Println("You've created instance of " + name)
 	v := CurlyBrackets(Values(i))
-	fmt.Println(v)
 	db := cfg.Conn
 	query := "INSERT INTO " + name + " VALUES " + v
-	fmt.Println(query)
-	_, err := db.Exec(query)
-	fmt.Println(err)
+	colorstring.Println("[green]"+query)
+	db.Exec(query)
 	return i
 }
 
@@ -93,6 +86,7 @@ func All(u interface{}) []interface{}{
 	db := cfg.Conn
     name := Name(u)
     query := "SELECT * FROM " + name + ";"
+    colorstring.Println("[blue]"+query)
 	rows, _ := db.Query(query)
 
   	var data []interface{}
@@ -132,7 +126,7 @@ func Find(u interface{}, id string) []interface{}{
 	db := cfg.Conn
     name := Name(u)
     query := "SELECT * FROM " + name + " WHERE " + "id = '"+id+"';"
-    fmt.Println(query)
+    colorstring.Println("[blue]" + query)
 	rows, _ := db.Query(query)
 
   	var data []interface{}
