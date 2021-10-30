@@ -7,14 +7,6 @@ import (
           "database/sql"
 )
 
-const (
-  host     = "localhost"
-  port     = 5432
-  user     = "goc"  
-  password = "development"
-  dbname   = "development"
-)
-
 var Conn *sql.DB
 
 func ConnectionInfo() string {
