@@ -37,4 +37,13 @@ func main(){
 	uid := newid.String()
 	c := Company{uid, ap.(string), []string{}, 100}
 	fmt.Println(c)
+	zs := db.Set(find, "Name", "Text")
+	
+    j, err := json.MarshalIndent(zs, "", "    ")
+    if err != nil {
+        log.Fatal("Failed to generate json", err)
+    }
+    js := string(j)
+    colorstring.Println("[yellow]" +js+"\n")
+	
 }
