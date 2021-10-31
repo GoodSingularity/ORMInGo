@@ -6,14 +6,13 @@ import(
 	"reflect"
 )
 
-func Find(u interface{}, id string) []interface{}{
+func Find(u interface{}, id string) interface{}{
 	db := cfg.Conn
     name := Name(u)
     query := "SELECT * FROM " + name + " WHERE " + "id = '"+id+"';"
     colorstring.Println("[blue]" + query)
 	rows, _ := db.Query(query)
 
-  	var data []interface{}
     for rows.Next() {
 
          t := reflect.TypeOf(u)
@@ -25,7 +24,7 @@ func Find(u interface{}, id string) []interface{}{
          if errScan != nil {
              //proper err handling
          }
-         data = append(data, val)
+    return val
     }
-    return data
+    return nil
 }

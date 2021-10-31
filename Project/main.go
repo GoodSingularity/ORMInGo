@@ -8,6 +8,7 @@ import(
 	"github.com/google/uuid"
 	"github.com/mitchellh/colorstring"
 	. "Project/Models"
+	. "github.com/tidwall/gjson"
 )
 
 func main(){
@@ -30,5 +31,10 @@ func main(){
     if err != nil {
         log.Fatal("Failed to generate json", err)
     }
-    colorstring.Println("[yellow]" +string(prettyjSON)+"\n")
+    rows := string(prettyjSON)
+    colorstring.Println("[yellow]" +rows+"\n")
+    name := Get(rows, "Name")
+    println(name.String())
+    arr := Get(rows, "Arr")
+    println(arr.String())
 }
