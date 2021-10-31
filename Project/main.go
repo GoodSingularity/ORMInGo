@@ -8,15 +8,14 @@ import(
 	"github.com/google/uuid"
 	"github.com/mitchellh/colorstring"
 	. "Project/Models"
-	. "github.com/tidwall/gjson"
 )
 
 func main(){
 	var status = cfg.SetConnection()
 	fmt.Println(status)
 	id := uuid.New()
-	uuid := id.String()
-	cmp := Company{uuid, "Int",[]string{"kamil", "lukasz", "tycjan"}, 10}
+	uuids := id.String()
+	cmp := Company{uuids, "Int",[]string{"kamil", "lukasz", "tycjan"}, 10}
 	db.New(cmp)
   	all := db.All(Company{})
 
@@ -33,8 +32,9 @@ func main(){
     }
     rows := string(prettyjSON)
     colorstring.Println("[yellow]" +rows+"\n")
-    name := Get(rows, "Name")
-    println(name.String())
-    arr := Get(rows, "Arr")
-    println(arr.String())
+	ap := db.Get(find, "Name")
+	newid := uuid.New()
+	uid := newid.String()
+	c := Company{uid, ap.(string), []string{}, 100}
+	fmt.Println(c)
 }
